@@ -1,0 +1,42 @@
+{% extends 'animals/base.html' %}
+
+{% block title %}Liste des adoptants{% endblock %}
+
+{% block content %}
+<div class="header-actions">
+    <h2>Demandes d'adoption</h2>
+    <a href="{% url 'adopter_add' %}" class="btn btn-primary">➕ Ajouter un adoptant</a>
+</div>
+
+{% if adopters %}
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Téléphone</th>
+            <th>Adresse</th>
+            <th>Animal souhaité</th>
+            <th>Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for adopter in adopters %}
+        <tr>
+            <td>{{ adopter.name }}</td>
+            <td>{{ adopter.phone }}</td>
+            <td>{{ adopter.address|linebreaksbr }}</td>
+            <td>{% if adopter.animal %}{{ adopter.animal.name }}{% else %}Non précisé{% endif %}</td>
+            <td>{{ adopter.created_at|date:'d/m/Y H:i' }}</td>
+            <td>
+                <a href="{% url 'adopter_edit' adopter.pk %}" class="btn btn-warning">Modifier</a>
+                <a href="{% url 'adopter_delete' adopter.pk %}" class="btn btn-danger">Supprimer</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>Aucun adoptant enregistré pour le moment.</p>
+{% endif %}
+{% endblock %}

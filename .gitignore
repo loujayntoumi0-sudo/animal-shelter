@@ -1,0 +1,11 @@
+# Django
+*.pyc
+__pycache__/
+venv/
+.env
+db.sqlite3
+media/
+*.log
+.DS_Store
+.env
+.env

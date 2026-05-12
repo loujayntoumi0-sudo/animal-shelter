@@ -1,0 +1,58 @@
+{% extends 'animals/base.html' %}
+
+{% block title %}Ajouter un adoptant{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h2>{{ title }}</h2>
+    <form method="post">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+            <div class="error">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        <div class="form-group">
+            <label>Nom complet:</label>
+            {{ form.name }}
+            {% if form.name.errors %}
+                <div class="error">{{ form.name.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label>Adresse:</label>
+            {{ form.address }}
+            {% if form.address.errors %}
+                <div class="error">{{ form.address.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label>Téléphone:</label>
+            {{ form.phone }}
+            {% if form.phone.errors %}
+                <div class="error">{{ form.phone.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label>Animal souhaité:</label>
+            {{ form.animal }}
+            {% if form.animal.errors %}
+                <div class="error">{{ form.animal.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label>Commentaires:</label>
+            {{ form.notes }}
+            {% if form.notes.errors %}
+                <div class="error">{{ form.notes.errors }}</div>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Enregistrer</button>
+        <a href="{% url 'adopter_list' %}" class="btn btn-secondary">Annuler</a>
+    </form>
+</div>
+{% endblock %}

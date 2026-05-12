@@ -1,0 +1,87 @@
+{% extends 'animals/base.html' %}
+
+{% block title %}Liste des animaux{% endblock %}
+
+{% block content %}
+<div class="header-actions">
+    <h2>Nos Animaux</h2>
+    {% if user.is_authenticated %}
+        <div style="display:flex; gap:10px; flex-wrap: wrap;">
+            <a href="{% url 'animal_add' %}" class="btn btn-primary">➕ Ajouter un animal</a>
+            <a href="{% url 'adopter_list' %}" class="btn btn-secondary">🤝 Voir les adoptants</a>
+        </div>
+    {% endif %}
+</div>
+
+<div class="stats-container">
+    <div class="stat-card">
+        <div class="stat-number">{{ stats.total }}</div>
+        <div>Total animaux</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">{{ stats.available }}</div>
+        <div>Disponibles</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">{{ stats.adopted }}</div>
+        <div>Adoptés</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">{{ stats.medical }}</div>
+        <div>Soins médicaux</div>
+    </div>
+</div>
+
+{% if animals %}
+<div class="cards-grid">
+    {% for animal in animals %}
+    <div class="card">
+        {% if animal.image %}
+            <div class="card-image-wrapper">
+                <img src="{{ animal.image.url }}" alt="{{ animal.name }}" class="card-image">
+            </div>
+        {% else %}
+            <div class="card-image-wrapper placeholder">
+                🐾 Photo non disponible
+            </div>
+        {% endif %}
+        <div class="card-content">
+            <h3>{{ animal.name }}</h3>
+            <p><strong>Espèce:</strong> {{ animal.get_species_display }}</p>
+            {% if animal.breed_text %}
+            <p><strong>Race:</strong> {{ animal.breed_text }}</p>
+            {% elif animal.breed %}
+            <p><strong>Race:</strong> {{ animal.breed.name }}</p>
+            {% endif %}
+            <p><strong>Âge:</strong> {{ animal.age_in_years }}</p>
+            <p><strong>Sexe:</strong> {{ animal.get_gender_display }}</p>
+            <p><strong>Statut:</strong> 
+                <span class="status status-{{ animal.status }}">
+                    {{ animal.get_status_display }}
+                </span>
+            </p>
+            {% if animal.description %}
+            <p><strong>Description:</strong> {{ animal.description|truncatewords:15 }}</p>
+            {% endif %}
+            
+            {% if user.is_authenticated %}
+            <div class="action-buttons">
+                <a href="{% url 'animal_edit' animal.pk %}" class="btn btn-warning">✏️ Modifier</a>
+                <a href="{% url 'animal_delete' animal.pk %}" class="btn btn-danger">🗑️ Supprimer</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="stat-card" style="text-align: center; padding: 50px;">
+    <p>Aucun animal dans le refuge pour le moment.</p>
+    {% if user.is_authenticated %}
+        <a href="{% url 'animal_add' %}" class="btn btn-primary" style="margin-top: 20px;">Ajouter votre premier animal</a>
+    {% else %}
+        <p><a href="{% url 'login' %}">Connectez-vous</a> pour ajouter des animaux.</p>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}

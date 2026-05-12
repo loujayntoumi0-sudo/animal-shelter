@@ -1,0 +1,84 @@
+{% extends 'animals/base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h2>{{ title }}</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+            <div class="error">{{ form.non_field_errors }}</div>
+        {% endif %}
+        
+        <div class="form-group">
+            <label>Nom:</label>
+            {{ form.name }}
+            {% if form.name.errors %}
+                <div class="error">{{ form.name.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label>Espèce:</label>
+            {{ form.species }}
+            {% if form.species.errors %}
+                <div class="error">{{ form.species.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label>Race:</label>
+            {{ form.breed_text }}
+            {% if form.breed_text.errors %}
+                <div class="error">{{ form.breed_text.errors }}</div>
+            {% endif %}
+            <small class="form-text">Saisissez la race de l'animal librement.</small>
+        </div>
+        
+        <div class="form-group">
+            <label>Âge (mois):</label>
+            {{ form.age }}
+            {% if form.age.errors %}
+                <div class="error">{{ form.age.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label>Sexe:</label>
+            {{ form.gender }}
+            {% if form.gender.errors %}
+                <div class="error">{{ form.gender.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label>Statut:</label>
+            {{ form.status }}
+            {% if form.status.errors %}
+                <div class="error">{{ form.status.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label>Description:</label>
+            {{ form.description }}
+            {% if form.description.errors %}
+                <div class="error">{{ form.description.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label>Photo de l'animal:</label>
+            {{ form.image }}
+            {% if form.image.errors %}
+                <div class="error">{{ form.image.errors }}</div>
+            {% endif %}
+            <small class="form-text">Formats acceptés: JPG, PNG, GIF (max 5MB)</small>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">💾 Enregistrer</button>
+        <a href="{% url 'animal_list' %}" class="btn btn-secondary">Annuler</a>
+    </form>
+</div>
+{% endblock %}

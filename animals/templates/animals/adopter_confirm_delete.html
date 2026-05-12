@@ -1,0 +1,15 @@
+{% extends 'animals/base.html' %}
+
+{% block title %}Supprimer une adoption{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h2>{{ title }}</h2>
+    <p>Voulez-vous vraiment supprimer la demande d'adoption de <strong>{{ adopter.name }}</strong> pour l'animal <strong>{% if adopter.animal %}{{ adopter.animal.name }}{% else %}aucun animal{% endif %}</strong> ?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Oui, supprimer</button>
+        <a href="{% url 'adopter_list' %}" class="btn btn-secondary">Annuler</a>
+    </form>
+</div>
+{% endblock %}
