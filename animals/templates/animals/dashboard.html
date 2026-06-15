@@ -1,0 +1,131 @@
+{% extends 'animals/base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div>
+    <div class="header-actions">
+        <div>
+            <h2>Tableau de bord santé</h2>
+            <p>Visualisez les tendances de poids et de hauteur par race pour suivre l'état de vos animaux.</p>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+            <a href="{% url 'health_record_add' %}" class="btn btn-primary">➕ Ajouter une fiche de santé</a>
+            <a href="{% url 'vet_list' %}" class="btn btn-secondary">🩺 Voir l'équipe vétérinaire</a>
+            <a href="{% url 'pharmacy_list' %}" class="btn btn-secondary">💊 Pharmacie</a>
+        </div>
+    </div>
+
+    <div class="stats-container">
+        <div class="stat-card">
+            <div class="stat-number">{{ record_count }}</div>
+            <div>Mesures enregistrées</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ vet_count }}</div>
+            <div>Vétérinaires</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ medication_count }}</div>
+            <div>Produits en pharmacie</div>
+        </div>
+    </div>
+
+    {% if chart_available %}
+    <div class="card" style="padding: 20px;">
+        <h3>Tendance du poids moyen par race</h3>
+        <canvas id="weightChart"></canvas>
+    </div>
+
+    <div class="card" style="padding: 20px; margin-top: 20px;">
+        <h3>Tendance de la hauteur moyenne par race</h3>
+        <canvas id="heightChart"></canvas>
+    </div>
+    {% else %}
+    <div class="card" style="padding: 20px; text-align: center;">
+        <h3>Aucun suivi santé disponible</h3>
+        <p>Ajoutez des fiches de santé pour visualiser les courbes de poids et de taille.</p>
+        <a href="{% url 'health_record_add' %}" class="btn btn-primary">➕ Ajouter une fiche de santé</a>
+    </div>
+    {% endif %}
+
+    <div class="card" style="padding: 20px; margin-top: 20px;">
+        <h3>Dernières fiches de santé</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Animal</th>
+                    <th>Poids</th>
+                    <th>Hauteur</th>
+                    <th>Condition</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in recent_records %}
+                <tr>
+                    <td>{{ record.recorded_at }}</td>
+                    <td>{{ record.animal.name }}</td>
+                    <td>{{ record.weight }} kg</td>
+                    <td>{{ record.height }} cm</td>
+                    <td>{{ record.condition|default:'Non renseigné' }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5">Aucune fiche de santé disponible.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const weightData = {{ weight_series|safe }};
+const heightData = {{ height_series|safe }};
+
+function buildChart(canvasId, label, datasets, ySuffix) {
+    const ctx = document.getElementById(canvasId);
+    return new Chart(ctx, {
+        type: 'line',
+        data: {
+            datasets: datasets.map((dataset, index) => ({
+                ...dataset,
+                parsing: false,
+                borderColor: `hsl(${index * 45 % 360}, 75%, 45%)`,
+                backgroundColor: 'transparent',
+                tension: 0.4,
+                pointRadius: 4,
+                pointHoverRadius: 6,
+            }))
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'top' },
+                title: { display: false, text: label }
+            },
+            scales: {
+                x: {
+                    type: 'category',
+                    title: { display: true, text: 'Période' }
+                },
+                y: {
+                    title: { display: true, text: ySuffix },
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
+
+if (document.getElementById('weightChart')) {
+    buildChart('weightChart', 'Poids moyen par race', weightData, 'Poids (kg)');
+}
+if (document.getElementById('heightChart')) {
+    buildChart('heightChart', 'Hauteur moyenne par race', heightData, 'Hauteur (cm)');
+}
+</script>
+{% endblock %}
+

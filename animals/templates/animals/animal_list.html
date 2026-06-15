@@ -55,6 +55,9 @@
             {% endif %}
             <p><strong>Âge:</strong> {{ animal.age_in_years }}</p>
             <p><strong>Sexe:</strong> {{ animal.get_gender_display }}</p>
+            <p><strong>Poids:</strong> {{ animal.weight|default:'N/A' }} kg</p>
+            <p><strong>Hauteur:</strong> {{ animal.height|default:'N/A' }} cm</p>
+            <p><strong>État santé:</strong> {{ animal.health_summary }}</p>
             <p><strong>Statut:</strong> 
                 <span class="status status-{{ animal.status }}">
                     {{ animal.get_status_display }}

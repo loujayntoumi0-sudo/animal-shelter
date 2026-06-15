@@ -1,0 +1,51 @@
+{% extends 'animals/base.html' %}
+
+{% block title %}Discussion{% endblock %}
+
+{% block content %}
+    <div class="form-container">
+        <h2>Discussion avec les vétérinaires</h2>
+        <p>Choisissez un vétérinaire pour démarrer une conversation ou voir les messages récents.</p>
+
+        <div class="cards-grid" style="margin-top: 20px;">
+            {% for vet in vets %}
+                <div class="card">
+                    <div class="card-content">
+                        <h3>{{ vet.name }}</h3>
+                        <p><strong>Spécialité :</strong> {{ vet.specialty }}</p>
+                        <p>{{ vet.contact_info }}</p>
+                        <div class="action-buttons">
+                            <a class="btn btn-primary" href="{% url 'chat_thread' vet.id %}">Ouvrir la discussion</a>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <p>Aucun vétérinaire disponible pour l'instant.</p>
+            {% endfor %}
+        </div>
+
+        {% if recent_messages %}
+            <h3 style="margin-top: 32px;">Messages récents</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Vétérinaire</th>
+                        <th>Expéditeur</th>
+                        <th>Dernier message</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for message in recent_messages %}
+                        <tr>
+                            <td>{{ message.vet.name }}</td>
+                            <td>{{ message.sender_name }}</td>
+                            <td>{{ message.message|truncatechars:60 }}</td>
+                            <td>{{ message.created_at|date:'d/m/Y H:i' }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+{% endblock %}

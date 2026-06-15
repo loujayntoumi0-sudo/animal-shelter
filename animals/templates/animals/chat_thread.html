@@ -1,0 +1,46 @@
+{% extends 'animals/base.html' %}
+
+{% block title %}Discussion{% endblock %}
+
+{% block content %}
+    <div class="form-container">
+        <div class="header-actions">
+            <div>
+                <h2>Discussion avec {{ vet.name }}</h2>
+                <p>Envoyez un message au vétérinaire et suivez l'historique de la conversation.</p>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 24px;">
+            {% if chat_messages %}
+                {% for message in chat_messages %}
+                    <div class="card" style="margin-bottom: 14px; padding: 18px; background: {% if message.is_from_vet %}rgba(62, 104, 255, 0.08){% else %}rgba(34, 176, 125, 0.08){% endif %};">
+                        <div style="display: flex; justify-content: space-between; align-items: start;">
+                            <div style="flex: 1;">
+                                <p style="margin-bottom: 6px;"><strong>{{ message.sender_name }}</strong> <small style="color: var(--text-secondary);">{{ message.created_at|date:'d/m/Y H:i' }}</small></p>
+                                <p style="white-space: pre-wrap; color: var(--text-primary);">{{ message.message }}</p>
+                            </div>
+                            {% if message.user == request.user and not message.is_from_vet %}
+                                <div style="display: flex; gap: 8px; margin-left: 12px;">
+                                    <a href="{% url 'chat_message_edit' message.id %}" class="btn btn-secondary" style="padding: 8px 12px; font-size: 0.85rem;">✏️ Modifier</a>
+                                    <a href="{% url 'chat_message_delete' message.id %}" class="btn btn-danger" style="padding: 8px 12px; font-size: 0.85rem;">🗑️ Supprimer</a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>Aucun message pour le moment. Envoyez le premier message au vétérinaire.</p>
+            {% endif %}
+        </div>
+
+        <form method="post" novalidate>
+            {% csrf_token %}
+            <div class="form-group">
+                {{ form.message.label_tag }}
+                {{ form.message }}
+            </div>
+            <button type="submit" class="btn btn-primary">Envoyer</button>
+        </form>
+    </div>
+{% endblock %}

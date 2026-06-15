@@ -1,0 +1,24 @@
+{% extends 'animals/base.html' %}
+
+{% block title %}Supprimer le message{% endblock %}
+
+{% block content %}
+    <div class="form-container" style="text-align: center;">
+        <h2>Supprimer le message</h2>
+        <p style="color: var(--text-secondary); font-size: 1.05rem; margin: 20px 0;">
+            Êtes-vous sûr de vouloir supprimer ce message ?
+        </p>
+        
+        <div class="card" style="margin-bottom: 24px; background: rgba(223, 75, 75, 0.08); padding: 18px;">
+            <p style="white-space: pre-wrap; color: var(--text-primary);">{{ message.message }}</p>
+        </div>
+
+        <form method="post" novalidate>
+            {% csrf_token %}
+            <div class="action-buttons" style="justify-content: center;">
+                <button type="submit" class="btn btn-danger">🗑️ Confirmer la suppression</button>
+                <a href="{% url 'chat_thread' message.vet.id %}" class="btn btn-secondary">Annuler</a>
+            </div>
+        </form>
+    </div>
+{% endblock %}

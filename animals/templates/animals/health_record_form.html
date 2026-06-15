@@ -5,7 +5,7 @@
 {% block content %}
 <div class="form-container">
     <h2>{{ title }}</h2>
-    <form method="post" enctype="multipart/form-data">
+    <form method="post">
         {% csrf_token %}
         {% if form.non_field_errors %}
             <div class="error">{{ form.non_field_errors }}</div>
@@ -15,7 +15,7 @@
         </div>
         <div class="action-buttons" style="margin-top: 20px;">
             <button type="submit" class="btn btn-primary">💾 Enregistrer</button>
-            <a href="{% url 'animal_list' %}" class="btn btn-secondary">Annuler</a>
+            <a href="{% url 'health_record_list' %}" class="btn btn-secondary">Annuler</a>
         </div>
     </form>
 </div>

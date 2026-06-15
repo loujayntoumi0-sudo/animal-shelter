@@ -1,0 +1,46 @@
+{% extends 'animals/base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="header-actions">
+    <h2>{{ title }}</h2>
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <a href="{% url 'vet_add' %}" class="btn btn-primary">➕ Ajouter un vétérinaire</a>
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary">📊 Tableau de bord</a>
+    </div>
+</div>
+
+<div class="card" style="padding: 20px;">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Spécialité</th>
+                <th>Téléphone</th>
+                <th>Email</th>
+                <th>Actif</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for vet in vets %}
+            <tr>
+                <td>{{ vet.name }}</td>
+                <td>{{ vet.specialty|default:'-' }}</td>
+                <td>{{ vet.phone|default:'-' }}</td>
+                <td>{{ vet.email|default:'-' }}</td>
+                <td>{{ vet.active|yesno:'Oui,Non' }}</td>
+                <td>
+                    <a href="{% url 'vet_edit' vet.pk %}" class="btn btn-secondary">Modifier</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" style="text-align: center;">Aucun vétérinaire enregistré.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

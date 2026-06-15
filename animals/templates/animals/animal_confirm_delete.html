@@ -1,19 +1,19 @@
 {% extends 'animals/base.html' %}
 
-{% block title %}Delete {{ animal.name }}{% endblock %}
+{% block title %}Supprimer {{ animal.name }}{% endblock %}
 
 {% block content %}
 <div class="form-container">
-    <h2>Delete Animal</h2>
+    <h2>Supprimer l'animal</h2>
     <div class="card" style="margin: 20px 0; background: #fff3cd;">
-        <p style="font-size: 18px;">Are you sure you want to delete <strong>{{ animal.name }}</strong>?</p>
-        <p>This action cannot be undone.</p>
+        <p style="font-size: 18px; color: #5f4b1b;">Voulez-vous vraiment supprimer <strong>{{ animal.name }}</strong> ?</p>
+        <p>Cette action est définitive et ne peut pas être annulée.</p>
     </div>
     
     <form method="post">
         {% csrf_token %}
-        <button type="submit" class="btn btn-danger">Yes, Delete</button>
-        <a href="{% url 'animal_list' %}" class="btn btn-secondary">Cancel</a>
+        <button type="submit" class="btn btn-danger">Oui, supprimer</button>
+        <a href="{% url 'animal_list' %}" class="btn btn-secondary">Annuler</a>
     </form>
 </div>
 {% endblock %}

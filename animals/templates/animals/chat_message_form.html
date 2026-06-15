@@ -1,0 +1,22 @@
+{% extends 'animals/base.html' %}
+
+{% block title %}Modifier le message{% endblock %}
+
+{% block content %}
+    <div class="form-container">
+        <h2>Modifier le message</h2>
+        
+        <form method="post" novalidate>
+            {% csrf_token %}
+            <div class="form-group">
+                {{ form.message.label_tag }}
+                {{ form.message }}
+            </div>
+
+            <div class="action-buttons">
+                <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+                <a href="{% url 'chat_thread' message.vet.id %}" class="btn btn-secondary">Annuler</a>
+            </div>
+        </form>
+    </div>
+{% endblock %}

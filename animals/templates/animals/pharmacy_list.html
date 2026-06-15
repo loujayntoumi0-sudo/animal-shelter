@@ -1,0 +1,46 @@
+{% extends 'animals/base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="header-actions">
+    <h2>{{ title }}</h2>
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <a href="{% url 'medication_add' %}" class="btn btn-primary">➕ Ajouter un produit</a>
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary">📊 Tableau de bord</a>
+    </div>
+</div>
+
+<div class="card" style="padding: 20px;">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Produit</th>
+                <th>Catégorie</th>
+                <th>Stock</th>
+                <th>Prix (€)</th>
+                <th>Espèces</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in medicines %}
+            <tr>
+                <td>{{ product.name }}</td>
+                <td>{{ product.category|default:'-' }}</td>
+                <td>{{ product.stock }}</td>
+                <td>{{ product.price }}</td>
+                <td>{{ product.for_species|default:'Toutes' }}</td>
+                <td>
+                    <a href="{% url 'medication_edit' product.pk %}" class="btn btn-secondary">Modifier</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" style="text-align: center;">Aucun produit enregistré dans la pharmacie.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
